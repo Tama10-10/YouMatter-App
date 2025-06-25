@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We are here for you!</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body class="register">
+    <header class="header">
+      <a href="profile.html" class="logo"><img src="image hub\Safe.png" /></a>
+      <label id="menu-icon" class="icons"
+        ><i class="fa-solid fa-bars" onclick="show()"></i
+      ></label>
+      <nav class="navbar" id="navbar">
+        <a href="#" style="--i: 0">About</a>
+        <a href="#" style="--i: 1">Help</a>
+        <a href="#" style="--i: 2">Contact</a>
+      </nav>
+    </header>
+
+    <div class="Signup" id="Signup">
+      <form id="signupForm">
+        <div><h2>Sign Up</h2></div>
+
+        <div class="inputbox1">
+          <input type="text" name="name" placeholder="Your Name" required />
+        </div>
+
+        <div class="inputbox1">
+          <input type="text" name="userName" placeholder="Username" required />
+        </div>
+
+        <div class="inputbox1">
+          <input type="email" name="email" placeholder="Your Email" required />
+        </div>
+        <div class="inputbox1">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <div class="inputbox1">
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Repeat your password"
+            required
+          />
+        </div>
+        <div class="inputbox1">
+          <input
+            type="number"
+            name="emergencyContact"
+            placeholder="Emergency Contact"
+            required
+          />
+        </div>
+        <div class="inputbox1">
+          <input
+            type="number"
+            name="mobileNumber"
+            placeholder="Your Phone Number"
+            required
+          />
+        </div>
+        <div class="inputbox1">
+          <input
+            type="number"
+            name="secretPin"
+            placeholder="Enter Secret PIN Code"
+            required
+          />
+        </div>
+
+        <div class="agree">
+          <label>
+            <input type="checkbox" name="agreedToTerms" required />
+            I agree all statements in terms of service and Conditions
+          </label>
+          <button type="submit" class="btn">Register</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Place JS here -->
+    <script src="work.js"></script>
+    <script>
+      // Signup form connection
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const form = e.target;
+
+          const data = {
+            name: form.name.value,
+            userName: form.userName.value,
+            email: form.email.value,
+            password: form.password.value,
+            confirmPassword: form.confirmPassword.value,
+            emergencyContact: form.emergencyContact.value,
+            mobileNumber: form.mobileNumber.value,
+            secretPin: form.secretPin.value,
+            agreedToTerms: form.agreedToTerms.checked,
+          };
+
+          try {
+            const res = await fetch("http://localhost:3000/user/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+              alert("Signup successful!");
+              form.reset();
+              window.location.href = "index.html";
+              // Optional: reset form after success
+            } else {
+              alert("Signup failed: " + result.error);
+            }
+          } catch (error) {
+            alert("Error: " + error.message);
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouMatter-Home page</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .feature-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        max-width: 800px;
+        width: 100%; /* Make it take full width inside the section */
+        margin: 30px auto 0; /* Center horizontally */
+        box-sizing: border-box;
+      }
+
+      .feature-card {
+        flex: 0 0 300px;
+
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-8px);
+        background-color: #5f268d; /* Purple background on hover */
+        color: white; /* Change text color to white */
+        box-shadow: 0 8px 20px rgba(95, 38, 141, 0.25);
+      }
+
+      .feature-card:hover i {
+        color: white; /* Change icon color to match on hover */
+      }
+
+      .feature-card i {
+        font-size: 30px;
+        color: #5f268d;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="profile.html" class="logo"><img src="image hub\Safe.png" /></a>
+      <label id="menu-icon" class="icons"
+        ><i class="fa-solid fa-bars" onclick="show()"></i
+      ></label>
+      <nav class="navbar" id="navbar">
+        <a href="#login" style="--i: 1">Log In</a>
+        <a href="#about" style="--i: 0">About</a>
+
+        <a href="#contact" style="--i: 2">Contact</a>
+      </nav>
+    </header>
+
+    <h1 id="headline">Your Safety,Our Priority</h1>
+    <div class="login" id="login">
+      <form>
+        <div><h2>Login</h2></div>
+        <div class="inputbox">
+          <input type="text" placeholder="Username" required /><i
+            class="fa-solid fa-user"
+          ></i>
+        </div>
+        <div class="inputbox">
+          <input type="password" placeholder="Password" required /><i
+            class="fa-solid fa-lock"
+          ></i>
+        </div>
+        <div class="forget-remember">
+          <label> <input type="checkbox" />Remember me</label>
+          <a href="#">Forgot Password?</a>
+          <button type="submit" class="btn">Login</button>
+        </div>
+        <div class="register">
+          <p>
+            Don't have an account?<a href="#" onclick="register()">Register</a>
+          </p>
+        </div>
+      </form>
+    </div>
+    <div id="tagline">
+      <p>
+        <i
+          >Empowering women's safety with real-time<br />
+          assistance and location tracking.</i
+        >
+      </p>
+    </div>
+    <div class="start">
+      <button id="strt-btn" onclick="start()">
+        <a href="#" id="strt">Get Started</a>
+      </button>
+    </div>
+
+    <section
+      id="about"
+      style="
+        max-width: 1000px;
+        padding: 100px 20px 60px; /* keep padding */
+        margin-top: 100vh;
+        margin-left: 20%;
+        background-color: #f7f7f7;
+        color: #333;
+        text-align: center;
+        box-sizing: border-box;
+      "
+    >
+      <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: #5f268d">
+        About YouMatter
+      </h2>
+      <p
+        style="
+          font-size: 1.1rem;
+          line-height: 1.8;
+          max-width: 800px;
+          margin: 0 auto;
+        "
+      >
+        <strong>YouMatter</strong> is a web application designed to ensure the
+        safety of women traveling alone, especially at night. Our app offers
+        real-time location tracking, emergency alerts, and features like fake
+        calls to help users avoid unsafe situations. We believe in using
+        technology to build a safer environment for everyone.
+      </p>
+
+      <div class="feature-container">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <h3>Live Tracking</h3>
+          <p>
+            Real-time tracking to help guardians monitor movement instantly.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <i class="fa-solid fa-phone-volume"></i>
+          <h3>Fake Call</h3>
+          <p>
+            Simulate an incoming call to help get out of uncomfortable
+            situations.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <i class="fa-solid fa-shield-heart"></i>
+          <h3>Safety Alerts</h3>
+          <p>
+            Send alerts in every 2 minutes for getting safety assurance from the
+            user.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <i class="fa-solid fa-location-arrow"></i>
+          <h3>Location Sharing</h3>
+          <p>
+            Instantly share your current location with a trusted contact for
+            quick help.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section
+      id="contact"
+      style="
+        max-width: 1000px;
+        padding: 100px 20px 60px; /* keep padding */
+        margin-top: 100vh;
+        margin-left: 20%;
+        background-color: #f7f7f7;
+        color: #333;
+        text-align: center;
+        box-sizing: border-box;
+      "
+    >
+      <h2 style="font-size: 2.2rem; color: #5f268d; margin-bottom: 20px">
+        Contact Us
+      </h2>
+      <p style="max-width: 700px; margin: 0 auto 30px; font-size: 1rem">
+        Have questions, feedback, or need support? We’re here to help. Reach out
+        to us using the form below.
+      </p>
+      <form
+        style="
+          max-width: 600px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        "
+      >
+        <input
+          type="text"
+          placeholder="Your Name"
+          required
+          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
+        />
+        <input
+          type="email"
+          placeholder="Your Email"
+          required
+          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
+        />
+        <textarea
+          rows="5"
+          placeholder="Your Message"
+          required
+          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
+        ></textarea>
+        <button
+          type="submit"
+          style="
+            padding: 12px;
+            background-color: #5f268d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+          "
+        >
+          Send Message
+        </button>
+      </form>
+    </section>
+
+    <script src="work.js"></script>
+    <script>
+      document
+        .querySelector(".login form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const form = e.target;
+          const userName = form.querySelector(
+            "input[placeholder='Username']"
+          ).value;
+          const password = form.querySelector(
+            "input[placeholder='Password']"
+          ).value;
+
+          try {
+            // Try admin login first
+            const adminRes = await fetch("http://localhost:3000/admin/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userName, password }),
+            });
+
+            const adminResult = await adminRes.json();
+
+            if (adminRes.ok) {
+              alert("Admin login successful!");
+              localStorage.setItem("accessToken", adminResult.accessToken);
+              localStorage.setItem("userRole", "admin");
+              window.location.href = "admin.html";
+              return; // ✅ Stop here if admin login succeeded
+            } else {
+              alert("admin login failed");
+            }
+
+            // If admin login failed, try user login
+            const userRes = await fetch("http://localhost:3000/user/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userName, password }),
+            });
+
+            const userResult = await userRes.json();
+
+            if (userRes.ok) {
+              alert("User login successful!");
+              localStorage.setItem("accessToken", userResult.accessToken);
+              localStorage.setItem("userId", userResult.user._id);
+              window.location.href = "user.html";
+            } else {
+              alert(userResult.error || "Login failed");
+            }
+          } catch (err) {
+            console.error("Login error:", err);
+            alert("Something went wrong!");
+          }
+        });
+    </script>
+    <script>
+      const contactForm = document.querySelector("#contact form");
+
+      contactForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Stop default form action
+
+        const name = contactForm
+          .querySelector('input[type="text"]')
+          .value.trim();
+        const email = contactForm
+          .querySelector('input[type="email"]')
+          .value.trim();
+        const message = contactForm.querySelector("textarea").value.trim();
+
+        if (!name || !email || !message) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        // ✅ You can replace this with your backend POST request
+        alert("Thank you! Your message has been sent.");
+
+        // Optionally reset the form
+        contactForm.reset();
+      });
+    </script>
+  </body>
+</html>

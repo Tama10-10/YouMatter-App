@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We are here for you!</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      /* Wrapper for entire form */
+      .profile-container {
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        min-height: 80vh;
+        background: #f6f6f6;
+        margin-left: 10%;
+      }
+
+      /* Card-style box */
+      .profile-card {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      }
+
+      @media (min-width: 1024px) {
+        .profile-card {
+          max-width: 1000px;
+        }
+      }
+
+      /* Profile header */
+      .profile-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .profile-header h2 {
+        font-size: 24px;
+        color: #4a235a;
+        margin-top: 15px;
+      }
+
+      /* Profile picture styling */
+      .profile-pic-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      #profilePic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .camera-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #6c3483;
+        color: white;
+        border-radius: 50%;
+        padding: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Each input/display section */
+      .profile-field {
+        margin: 15px 0;
+      }
+
+      .profile-field label {
+        font-size: 14px;
+        color: #7b7b7b;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .field-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fafafa;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        border: 1px solid #e0e0e0;
+      }
+
+      .edit-icon {
+        color: #6c3483;
+        cursor: pointer;
+      }
+
+      /* Buttons */
+      .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .save-btn,
+      .logout-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+
+      .save-btn {
+        background: #6c3483;
+      }
+
+      .logout-btn {
+        background: #b03a2e;
+      }
+
+      .save-btn:hover {
+        background: #5a2a6c;
+      }
+
+      .logout-btn:hover {
+        background: #922b21;
+      }
+      .reset-btn {
+        background-color: #6c3483;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .reset-btn:hover {
+        background-color: #5a2a6c;
+      }
+
+      @media (min-width: 1024px) {
+        .profile-card {
+          max-width: 700px;
+        }
+      }
+
+      /* Responsive for mobile */
+      @media (max-width: 600px) {
+        .profile-card {
+          padding: 20px;
+        }
+
+        .profile-header h2 {
+          font-size: 20px;
+        }
+
+        .field-display {
+          font-size: 15px;
+          padding: 10px;
+        }
+        #headline {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="#" class="logo"><img src="image hub\Safe.png" /></a>
+      <label id="menu-icon" class="icons"
+        ><i class="fa-solid fa-bars" onclick="show()"></i
+      ></label>
+      <nav class="navbar" id="navbar">
+        <a href="#" style="--i: 0">About</a>
+        <a href="#" style="--i: 1">Help</a>
+        <a href="#" style="--i: 2">Contact</a>
+      </nav>
+    </header>
+    <h1 id="headline">Your Safety,Our Priority</h1>
+    <div class="profile" id="profile">
+      <form id="profileForm" enctype="multipart/form-data">
+        <div class="profile-container">
+          <div class="profile-card">
+            <div class="profile-header">
+              <div class="profile-pic-container">
+                <img
+                  id="profilePic"
+                  src="image hub/default_image.jpg"
+                  alt="Profile Picture"
+                />
+                <label for="fileInput" class="camera-icon">
+                  <i class="fa fa-camera"></i>
+                </label>
+                <input type="file" id="fileInput" hidden />
+              </div>
+              <h2>Profile</h2>
+            </div>
+
+            <div class="profile-field">
+              <label>Name</label>
+              <div class="field-display">
+                <span id="userName"></span>
+                <i class="fa fa-pen edit-icon"></i>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <label>Emergency Contact</label>
+              <div class="field-display">
+                <span id="emergencyContact"></span>
+                <i class="fa fa-pen edit-icon"></i>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <label>Email ID</label>
+              <div class="field-display">
+                <span id="email"></span>
+                <i class="fa fa-pen edit-icon"></i>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <label>Mobile Number</label>
+              <div class="field-display">
+                <span id="mobileNumber"></span>
+                <i class="fa fa-pen edit-icon"></i>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <label>Forgot Secret PIN?</label>
+              <div class="field-display">
+                <button
+                  type="button"
+                  class="reset-btn"
+                  onclick="handleForgotPin()"
+                >
+                  Reset PIN
+                </button>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button type="submit" class="save-btn">Save Changes</button>
+              <button type="button" class="logout-btn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="work.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+    <script>
+      const userId = localStorage.getItem("userId"); // or fetch from auth token/session
+      const apiBase = "http://localhost:3000/user";
+
+      // Elements
+      const profilePic = document.getElementById("profilePic");
+      const fileInput = document.getElementById("fileInput");
+      const userNameEl = document.getElementById("userName");
+      const emailEl = document.getElementById("email");
+      const emergencyEl = document.getElementById("emergencyContact");
+      const mobileEl = document.getElementById("mobileNumber");
+
+      const fieldDisplays = document.querySelectorAll(".field-display span");
+      const saveBtn = document.querySelector(".save-btn");
+
+      let updatedData = {};
+
+      // Load user data
+      async function loadProfile() {
+        try {
+          const res = await fetch(`${apiBase}/${userId}`);
+          const user = await res.json();
+
+          userNameEl.innerText = user.userName || "";
+          emailEl.innerText = user.email || "";
+          emergencyEl.innerText = user.emergencyContact || "";
+          mobileEl.innerText = user.mobileNumber || "";
+
+          if (user.profilePic) {
+            profilePic.src = `/uploads/${user.profilePic}`;
+          }
+        } catch (err) {
+          console.error("Error loading profile", err);
+        }
+      }
+
+      // Handle inline edit
+      document.querySelectorAll(".edit-icon").forEach((icon) => {
+        icon.addEventListener("click", () => {
+          const span = icon.previousElementSibling;
+          const currentValue = span.textContent;
+          const input = document.createElement("input");
+          input.type = "text";
+          input.value = currentValue;
+          input.style.width = "80%";
+          span.replaceWith(input);
+
+          input.addEventListener("blur", () => {
+            const newValue = input.value;
+            const newSpan = document.createElement("span");
+            newSpan.textContent = newValue;
+            input.replaceWith(newSpan);
+
+            const label = icon
+              .closest(".profile-field")
+              .querySelector("label").innerText;
+            if (label.includes("Name")) updatedData.userName = newValue;
+            else if (label.includes("Email")) updatedData.email = newValue;
+            else if (label.includes("Mobile"))
+              updatedData.mobileNumber = newValue;
+            else if (label.includes("Emergency"))
+              updatedData.emergencyContact = newValue;
+          });
+        });
+      });
+
+      // Upload profile picture
+      fileInput.addEventListener("change", async () => {
+        const formData = new FormData();
+        formData.append("profilePic", fileInput.files[0]);
+
+        try {
+          const res = await fetch(`${apiBase}/${userId}/upload`, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          profilePic.src = `/uploads/${data.filename}`;
+        } catch (err) {
+          console.error("Upload failed", err);
+        }
+      });
+
+      // Save profile updates
+      saveBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (!Object.keys(updatedData).length)
+          return alert("No changes to save");
+
+        try {
+          const res = await fetch(`${apiBase}/${userId}/update`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedData),
+          });
+
+          const result = await res.json();
+          alert("Profile updated successfully!");
+          updatedData = {}; // reset
+        } catch (err) {
+          console.error("Save failed", err);
+        }
+      });
+
+      const socket = io("http://localhost:3000"); // make sure it's globally available
+
+      document.querySelector(".logout-btn").addEventListener("click", () => {
+        const userId = localStorage.getItem("userId");
+
+        if (userId && socket) {
+          socket.emit("user-logout", userId); // ✅ Notify backend
+        }
+
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userId");
+
+        window.location.href = "index.html"; // ✅ Redirect after logout
+      });
+
+      // Handle forgot PIN
+      function handleForgotPin() {
+        // You can change this logic to open a modal
+        alert("Contact support or go to settings to reset your secret PIN.");
+      }
+
+      // Load data on start
+      loadProfile();
+    </script>
+  </body>
+</html>

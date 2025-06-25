@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake Call - I'M SAFE</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f2f2f2;
+        color: #333;
+        background-image: none;
+      }
+
+      .container {
+        padding: 20px;
+        margin-top: 10%;
+      }
+      .header
+      {
+        max-width: none !important;
+       margin: 0 !important;
+      }
+      
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+      button {
+        background-color: #5f268d;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      button:hover {
+        opacity: 0.9;
+      }
+      #fakeCallScreen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: black;
+        color: white;
+      }
+      #fakeCallScreen h2 {
+        font-size: 2rem;
+      }
+      #fakeCallScreen p {
+        margin-top: 5px;
+        font-size: 1.2rem;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .form-group input[type="text"],
+      .form-group input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+      .avatar-selector {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+      }
+      .avatar-selector div {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: #d9d9d9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      .avatar-selector div.selected {
+        border-color: #5f268d;
+      }
+      .timers {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .timers button {
+        background: #5f268d;
+        color: #fff;
+        padding: 10px 16px;
+        margin: 6px 0;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        flex: 1 1 calc(50% - 10px);
+        font-size: 1rem;
+      }
+      .save-button {
+        width: 100%;
+        padding: 12px;
+        background: #5f268d;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      #fakeCallScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        color: white;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+    .avatar {
+  background: #4c5a67;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto; /* centers horizontally */
+}
+
+.avatar i {
+  font-size: 60px;
+  color: white;
+}
+
+
+
+
+      .caller-info {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .caller-info div {
+        margin: 5px 0;
+        font-size: 20px;
+      }
+
+      #callTimer {
+        font-size: 18px;
+        color: #ccc;
+      }
+
+      .call-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.call-actions i {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.end-call-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.end-call {
+  background-color: red;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.end-call:hover {
+  transform: scale(1.1);
+}
+
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="profile.html" class="logo"><img src="image hub\Safe.png" /></a>
+      <label id="menu-icon" class="icons"
+        ><i class="fa-solid fa-bars" onclick="show()"></i
+      ></label>
+      <nav class="navbar" id="navbar">
+        <a href="fakeCall.html" style="--i: 0">Fake Call</a>
+        <a href="user.html" style="--i: 1" id="trackMe">Track Me</a>
+        <a href="#" style="--i: 2" onclick="shareWithWhatsApp()"
+          >Share My Location</a
+        >
+      </nav>
+    </header>
+
+    <div
+  id="fakeCallCard"
+  style="
+    max-width: 500px;
+    width: 90%;
+    margin: 100px auto 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  "
+>
+  <h2 style="margin-bottom: 10px; font-size: 24px;">Fake Call</h2>
+  <p style="margin-bottom: 20px; color: #555;">
+    Place a fake phone call and pretend you are talking to someone.
+  </p>
+  
+  <div
+    style="
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      flex-wrap: wrap;
+      gap: 10px;
+    "
+  >
+    <div style="display: flex; align-items: center;">
+      <div
+        style="
+          width: 50px;
+          height: 50px;
+          background: #d9d9d9;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 10px;
+        "
+      >
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <div>
+        <strong id="name">Ma</strong>
+        <div id="number" style="font-size: 0.9rem; color: #666">
+          01303670625
+        </div>
+      </div>
+    </div>
+    <i
+      class="fa-solid fa-pen-to-square"
+      style="cursor: pointer"
+      onclick="showEditContainer()"
+    ></i>
+  </div>
+
+  <button
+    style="
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #5f268d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    "
+    onclick="showFakeCallScreen()"
+  >
+    Get a call
+  </button>
+</div>
+
+    <!--editing section-->
+    <div
+  id="editContainer"
+  style="
+    display: none;
+    max-width: 500px;
+    width: 90%;
+    margin: 100px auto 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  "
+>
+  <h2 style="margin-bottom: 15px; font-size: 24px;">Set Caller Details</h2>
+
+  <div
+    class="avatar-selector"
+    style="display: flex; justify-content: space-between; margin-bottom: 20px;"
+  >
+    <div class="selected" style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9d9d9; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; border: 2px solid #5f268d;">
+      <i class="fa-solid fa-user"></i>
+    </div>
+    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9d9d9; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;">
+      <i class="fa-solid fa-user-nurse"></i>
+    </div>
+    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9d9d9; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;">
+      <i class="fa-solid fa-user-tie"></i>
+    </div>
+    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: #d9d9d9; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;">
+      <i class="fa-solid fa-user-secret"></i>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-bottom: 15px;">
+    <label for="callerName" style="display: block; margin-bottom: 6px; font-weight: 600;">Caller Name</label>
+    <input
+      type="text"
+      id="callerName"
+      placeholder="e.g., Mom"
+      style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;"
+    />
+  </div>
+
+  <div class="form-group" style="margin-bottom: 15px;">
+    <label for="callerNumber" style="display: block; margin-bottom: 6px; font-weight: 600;">Caller Number</label>
+    <input
+      type="text"
+      id="callerNumber"
+      placeholder="e.g., 01301234567"
+      style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;"
+    />
+  </div>
+
+  <div class="form-group" style="margin-bottom: 20px;">
+    <label style="display: block; margin-bottom: 6px; font-weight: 600;">Select Call Timer</label>
+    <div class="timers" style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <button onclick="setDelay(5)" style="flex: 1 1 calc(50% - 5px); background-color: #5f268d; color: white; padding: 10px; border: none; border-radius: 8px;">5 sec</button>
+      <button onclick="setDelay(10)" style="flex: 1 1 calc(50% - 5px); background-color: #5f268d; color: white; padding: 10px; border: none; border-radius: 8px;">10 sec</button>
+      <button onclick="setDelay(30)" style="flex: 1 1 calc(50% - 5px); background-color: #5f268d; color: white; padding: 10px; border: none; border-radius: 8px;">30 sec</button>
+      <button onclick="setDelay(60)" style="flex: 1 1 calc(50% - 5px); background-color: #5f268d; color: white; padding: 10px; border: none; border-radius: 8px;">1 min</button>
+    </div>
+  </div>
+
+  <button
+    class="save-button"
+    onclick="saveFakeCall()"
+    style="width: 100%; padding: 12px; background-color: #5f268d; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;"
+  >
+    Save
+  </button>
+</div>
+
+
+    <audio id="ringtone" src="ringtone.mp3" loop></audio>
+    <!-- Fake Call Screen -->
+    <div id="fakeCallScreen" style="display: none">
+      <div class="call-screen">
+        <div class="avatar">
+          <i id="fakeAvatar" class="fa-solid fa-user"></i>
+        </div>
+        <div class="caller-info">
+          <div id="displayName">Ma</div>
+          <div id="displayNumber">01303670625</div>
+          <div id="callTimer">00:00</div>
+        </div>
+       <!-- Call Actions -->
+<div class="call-actions">
+  <div><i class="fa-solid fa-microphone"></i><br />Mute</div>
+  <div><i class="fa-solid fa-keyboard"></i><br />Dialpad</div>
+  <div><i class="fa-solid fa-volume-high"></i><br />Speaker</div>
+  <div><i class="fa-solid fa-video"></i><br />Video</div>
+  <div><i class="fa-solid fa-user-plus"></i><br />Add call</div>
+  <div><i class="fa-solid fa-circle-dot"></i><br />Record</div>
+</div>
+
+<!-- End Call Button -->
+<div class="end-call-wrapper">
+  <div class="end-call" onclick="endFakeCall()">
+    <i class="fa-solid fa-phone-slash"></i>
+  </div>
+</div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+<script src="shareLocation.js"></script>
+    <script>
+      function showEditContainer() {
+        document.getElementById("fakeCallCard").style.display = "none";
+        document.getElementById("editContainer").style.display = "block";
+      }
+
+      function saveFakeCall() {
+        // Get new values
+        const name = document.getElementById("callerName").value;
+        const number = document.getElementById("callerNumber").value;
+        localStorage.setItem("fakeCallName", name);
+        localStorage.setItem("fakeCallNumber", number);
+
+        // Update visible card text
+        if (name) document.getElementById("name").innerText = name;
+        if (number) document.getElementById("number").innerText = number;
+
+        // Toggle views
+        document.getElementById("editContainer").style.display = "none";
+        document.getElementById("fakeCallCard").style.display = "block";
+      }
+
+      let callTimerInterval;
+
+      function setDelay(seconds) {
+        console.log(`Call will ring after ${seconds} seconds`);
+        setTimeout(showFakeCallScreen, seconds * 1000);
+      }
+
+      function showFakeCallScreen() {
+        const name = localStorage.getItem("fakeCallName") || "Unknown";
+        const number = localStorage.getItem("fakeCallNumber") || "Unknown";
+
+        document.getElementById("displayName").innerText = name;
+        document.getElementById("displayNumber").innerText = number;
+
+        document.getElementById("fakeCallScreen").style.display = "flex";
+
+        startFakeTimer();
+        document.getElementById("ringtone").play();
+      }
+
+      function startFakeTimer() {
+        const timerDisplay = document.getElementById("callTimer");
+        let seconds = 0;
+
+        callTimerInterval = setInterval(() => {
+          seconds++;
+          const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+          const secs = String(seconds % 60).padStart(2, "0");
+          timerDisplay.innerText = `${mins}:${secs}`;
+        }, 1000);
+      }
+
+      function endFakeCall() {
+        clearInterval(callTimerInterval);
+        document.getElementById("fakeCallScreen").style.display = "none";
+        document.getElementById("ringtone").pause();
+        document.getElementById("ringtone").currentTime = 0;
+      }
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedName = localStorage.getItem("fakeCallName");
+        const savedNumber = localStorage.getItem("fakeCallNumber");
+
+        if (savedName) 
+        { document.getElementById("name").innerText = savedName;
+           document.getElementById("displayName").innerText = savedName;
+         }
+        if (savedNumber)
+        {
+           document.getElementById("number").innerText = savedNumber;
+            document.getElementById("displayNumber").innerText = savedNumber;
+        }
+         
+      });
+    </script>
+
+    <script src="work.js"></script>
+  </body>
+</html>

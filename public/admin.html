@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Panel - Real-time Locations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #ecf0f1;
+      }
+      h1 {
+        color: #2c3e50;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        background: #fff;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .user-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .status {
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 5px;
+        color: white;
+        text-transform: uppercase;
+      }
+      .safe {
+        background: #27ae60;
+      }
+      .danger {
+        background: #c0392b;
+      }
+
+      .emergency {
+        background: #e74c3c; /* brighter red or use animation */
+      }
+
+      .unconfirmed-danger {
+        background: #d35400; /* orange for uncertainty */
+      }
+
+      .unknown {
+        background: #7f8c8d;
+      }
+      .location {
+        font-size: 0.9em;
+        color: #34495e;
+        margin-top: 6px;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .view-btn {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #2980b9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .view-btn:hover {
+        background-color: #1f618d;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="notificationWrapper"
+      style="position: fixed; top: 20px; right: 20px; z-index: 9999"
+    >
+      <div id="bellIcon" style="cursor: pointer; position: relative">
+        🔔
+        <span
+          id="notifCount"
+          style="
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            display: none;
+          "
+          >0</span
+        >
+      </div>
+      <div
+        id="notifDropdown"
+        style="
+          display: none;
+          position: absolute;
+          right: 0;
+          top: 35px;
+          background: white;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+          width: 300px;
+          max-height: 400px;
+          overflow-y: auto;
+          border-radius: 8px;
+        "
+      >
+        <div
+          style="
+            padding: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+          "
+        >
+          Notifications
+        </div>
+        <ul id="notifList" style="list-style: none; margin: 0; padding: 0"></ul>
+      </div>
+    </div>
+    <!-- Place this in your HTML -->
+    <audio
+      id="notifSound"
+      src="https://www.soundjay.com/button/beep-07.wav"
+      preload="auto"
+    ></audio>
+
+    <div
+      id="notificationBar"
+      style="
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #5f268d;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1000;
+        font-size: 1rem;
+        font-weight: 500;
+        animation: slideDown 0.3s ease-out;
+      "
+    >
+      <!-- notification text here -->
+    </div>
+
+    <style>
+      @keyframes slideDown {
+        from {
+          top: -50px;
+          opacity: 0;
+        }
+        to {
+          top: 0;
+          opacity: 1;
+        }
+      }
+    </style>
+
+    <h1>Real-time User Locations</h1>
+
+    <ul id="userList"></ul>
+
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+    <script>
+      const socket = io("http://localhost:3000"); // Update if hosted differently
+      const userList = document.getElementById("userList");
+      const geocodeCache = new Map();
+
+      socket.on("connect", () => {
+        console.log("Connected as admin");
+        socket.emit("register-admin");
+      });
+
+      // Helper: Convert lat/lng to address using Google Maps Geocoding API
+      async function getAddress(lat, lng) {
+        const key = `${lat},${lng}`;
+        if (geocodeCache.has(key)) return geocodeCache.get(key);
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+          );
+          const data = await response.json();
+          const address = data.display_name || "Unknown location";
+
+          geocodeCache.set(key, address);
+          return address;
+        } catch (error) {
+          console.error("Nominatim API error:", error);
+          return "Unable to fetch address";
+        }
+      }
+
+      // Helper: Create status class
+
+      function createStatusClass(status) {
+        if (status === "safe") return "safe";
+        if (status === "emergency") return "emergency";
+        if (status === "unconfirmed-danger") return "unconfirmed-danger";
+        if (status === "danger") return "danger";
+        return "unknown";
+      } // Optional: treat as high danger
+      const previousStatuses = new Map();
+
+      socket.on("active-users", async (users) => {
+        const statusGroups = {
+          safe: [],
+          "unconfirmed-danger": [],
+          emergency: [],
+        };
+        const statusPriority = {
+          emergency: 1,
+          "unconfirmed-danger": 2,
+          danger: 3,
+          safe: 4,
+          unknown: 5,
+        };
+
+        // ✅ Sort users by priority
+        users.sort((a, b) => {
+          const p1 = statusPriority[a.status] || 99;
+          const p2 = statusPriority[b.status] || 99;
+          return p1 - p2;
+        });
+        userList.innerHTML = "";
+        for (const user of users) {
+          const li = document.createElement("li");
+          li.id = `user-${user.userId}`; // 👈 Add this line
+
+          // Header: username and status badge
+          const header = document.createElement("div");
+          header.classList.add("user-header");
+
+          const name = document.createElement("strong");
+          name.textContent = user.userName || user.userId || "Unknown";
+
+          const status = document.createElement("span");
+          status.classList.add("status", createStatusClass(user.status));
+          status.textContent = user.status || "unknown";
+
+          header.appendChild(name);
+          header.appendChild(status);
+          li.appendChild(header);
+
+          // Location text container
+          const locationText = document.createElement("div");
+          locationText.classList.add("location");
+
+          // Use the location from user.location (your backend's shape)
+          console.log(user.longitude, user.latitude);
+          if (
+            typeof user.latitude === "number" &&
+            typeof user.longitude === "number"
+          ) {
+            locationText.textContent = "Fetching address...";
+            getAddress(user.latitude, user.longitude).then((addr) => {
+              locationText.innerHTML = `
+      <div>${addr}</div>
+      <div>Lat: ${user.latitude.toFixed(6)}, Lng: ${user.longitude.toFixed(6)}</div>
+      <a href="https://www.google.com/maps?q=${user.latitude},${user.longitude}" target="_blank">📍 View on Google Maps</a>
+    `;
+            });
+          } else {
+            locationText.textContent = "Location not available";
+          }
+
+          li.appendChild(locationText);
+          // ✅ View Details button
+          const viewBtn = document.createElement("button");
+          viewBtn.textContent = "View Details";
+          viewBtn.classList.add("view-btn");
+          viewBtn.addEventListener("click", () => openModal(user));
+          li.appendChild(viewBtn);
+
+          userList.appendChild(li);
+          const prev = previousStatuses.get(user.userId);
+          const curr = user.status;
+          if (prev !== curr) {
+            previousStatuses.set(user.userId, curr);
+            if (curr === "safe") {
+              statusGroups.safe.push(user);
+            } else if (curr === "unconfirmed-danger") {
+              statusGroups["unconfirmed-danger"].push(user); // ✅ correct
+            } else if (curr === "emergency") {
+              statusGroups.emergency.push(user);
+            }
+          }
+        }
+        const displayLabels = {
+          safe: "SAFE ✅",
+          emergency: "EMERGENCY 🚨🚨",
+          "unconfirmed-danger": "UNCONFIRMED DANGER ⚠️",
+          unknown: "UNKNOWN ❓",
+        };
+
+        // 🔔 Send grouped notifications
+        for (const [type, group] of Object.entries(statusGroups)) {
+          if (group.length > 0) {
+            const first = group[0];
+            const name = first.userName || "Someone";
+            const othersCount = group.length - 1;
+
+            let message = "";
+            const label = displayLabels[type] || type.toUpperCase();
+
+            if (othersCount > 0) {
+              message = `${name} and ${othersCount} other${othersCount > 1 ? "s" : ""} marked themselves ${label}`;
+            } else {
+              message = `${name} marked herself ${label}`;
+            }
+
+            // 🛎️ Pass only first user's ID for scroll highlight
+            const notifType =
+              type === "emergency" || type === "unconfirmed-danger"
+                ? "danger"
+                : "info";
+
+            showNotification(message, notifType, first.userId);
+          }
+        }
+      });
+    </script>
+    <script>
+      async function openModal(user) {
+        const modal = document.getElementById("userModal");
+        const modalContent = document.getElementById("modalContent");
+
+        try {
+          const res = await fetch(`http://localhost:3000/user/${user.userId}`);
+          const userDetails = await res.json();
+
+          modalContent.innerHTML = `
+        <h2>User Details</h2>
+        <p><strong>Name:</strong> ${userDetails.userName || "Unknown"}</p>
+        <p><strong>Email:</strong> ${userDetails.email || "N/A"}</p>
+        <p><strong>Mobile Number:</strong> ${userDetails.mobileNumber || "N/A"}</p>
+        <p><strong>Emergency Contact:</strong> ${userDetails.emergencyContact || "N/A"}</p>
+        <p><strong>Status:</strong> ${user.status}</p>
+        <p><strong>Latitude:</strong> ${user.latitude ?? "N/A"}</p>
+        <p><strong>Longitude:</strong> ${user.longitude ?? "N/A"}</p>
+        <p><strong>Last Updated:</strong> ${new Date(user.lastUpdated).toLocaleString() || "N/A"}</p>
+        <button onclick="closeModal()" class="view-btn">Close</button>
+      `;
+
+          modal.style.display = "block";
+        } catch (err) {
+          modalContent.innerHTML = `<p style="color:red;">Failed to load user details</p>`;
+          modal.style.display = "block";
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("userModal").style.display = "none";
+      }
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("userModal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+    <script>
+      const bellIcon = document.getElementById("bellIcon");
+      const notifDropdown = document.getElementById("notifDropdown");
+      const notifList = document.getElementById("notifList");
+      const notifCount = document.getElementById("notifCount");
+      const notifSound = document.getElementById("notifSound");
+
+      let unseenCount = 0;
+
+      bellIcon.addEventListener("click", () => {
+        notifDropdown.style.display =
+          notifDropdown.style.display === "block" ? "none" : "block";
+        notifCount.style.display = "none";
+        unseenCount = 0;
+      });
+      function addNotificationToList(message, userId) {
+        const li = document.createElement("li");
+        li.style.padding = "10px";
+        li.style.borderBottom = "1px solid #eee";
+        li.style.cursor = "pointer";
+        li.textContent = message;
+
+        li.addEventListener("click", () => {
+          const target = document.getElementById(`user-${userId}`);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            // Temporary highlight
+            target.style.transition = "background 0.3s ease";
+            const originalBg = target.style.background;
+            target.style.background = "#ffff99"; // light yellow
+            setTimeout(() => {
+              target.style.background = originalBg || "#fff";
+            }, 1500);
+          }
+
+          // Hide dropdown
+          notifDropdown.style.display = "none";
+          notifCount.style.display = "none";
+          unseenCount = 0;
+        });
+
+        notifList.prepend(li);
+      }
+      function showNotification(message, type = "info", userId = "") {
+        const sound = document.getElementById("notifSound");
+        sound.volume = 1.0;
+        sound.muted = false;
+        sound.currentTime = 0;
+        sound.play().catch((err) => {
+          console.warn("Sound blocked or not supported:", err);
+        });
+
+        addNotificationToList(message, userId); // 👈 Pass userId
+
+        unseenCount++;
+        notifCount.textContent = unseenCount;
+        notifCount.style.display = "inline-block";
+
+        const bar = document.getElementById("notificationBar");
+        bar.style.background = type === "danger" ? "#c0392b" : "#5f268d";
+        bar.innerText = message;
+        bar.style.display = "block";
+        setTimeout(() => {
+          bar.style.display = "none";
+        }, 5000);
+      }
+    </script>
+    <!-- Modal -->
+    <div id="userModal" style="display: none" class="modal">
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </body>
+</html>
