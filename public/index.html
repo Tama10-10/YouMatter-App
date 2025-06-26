@@ -258,10 +258,16 @@
           const password = form.querySelector(
             "input[placeholder='Password']"
           ).value;
+          const BASE_URL = ["localhost", "127.0.0.1"].includes(
+            window.location.hostname
+          )
+            ? "http://localhost:3000"
+            : "";
 
+          console.log("Base URL being used:", BASE_URL);
           try {
             // Try admin login first
-            const adminRes = await fetch("http://localhost:3000/admin/login", {
+            const adminRes = await fetch(`${BASE_URL}/admin/login`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ userName, password }),
@@ -280,7 +286,7 @@
             }
 
             // If admin login failed, try user login
-            const userRes = await fetch("http://localhost:3000/user/login", {
+            const userRes = await fetch(`${BASE_URL}/user/login`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ userName, password }),

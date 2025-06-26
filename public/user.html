@@ -178,7 +178,11 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const socket = io("http://localhost:3000");
+        const socket = io(
+          ["localhost", "127.0.0.1"].includes(window.location.hostname)
+            ? "http://localhost:3000"
+            : window.location.origin // use same origin on Render
+        );
         const userId = localStorage.getItem("userId");
         socket.emit("register-user", userId);
         //realtime location tracking

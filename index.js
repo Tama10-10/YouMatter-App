@@ -23,9 +23,10 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ MongoDB connection
-mongoose.connect("mongodb://localhost/users")
-        .then(() => console.log('Connection successful'))
-        .catch((err) => console.log(err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB error:', err));
 
 // ✅ Serve frontend from public folder
 app.use(express.static(path.join(__dirname, 'public')));

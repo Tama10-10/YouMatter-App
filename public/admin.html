@@ -199,7 +199,13 @@
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 
     <script>
-      const socket = io("http://localhost:3000"); // Update if hosted differently
+      const socket = io(
+        ["localhost", "127.0.0.1"].includes(window.location.hostname)
+          ? "http://localhost:3000"
+          : window.location.origin // use same origin on Render
+      );
+
+      // Update if hosted differently
       const userList = document.getElementById("userList");
       const geocodeCache = new Map();
 
@@ -361,9 +367,14 @@
       async function openModal(user) {
         const modal = document.getElementById("userModal");
         const modalContent = document.getElementById("modalContent");
+        const BASE_URL = ["localhost", "127.0.0.1"].includes(
+          window.location.hostname
+        )
+          ? "http://localhost:3000"
+          : "";
 
         try {
-          const res = await fetch(`http://localhost:3000/user/${user.userId}`);
+          const res = await fetch(`${BASE_URL}/user/${user.userId}`);
           const userDetails = await res.json();
 
           modalContent.innerHTML = `

@@ -270,11 +270,16 @@
     </div>
 
     <script src="work.js"></script>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
     <script>
-      const userId = localStorage.getItem("userId"); // or fetch from auth token/session
-      const apiBase = "http://localhost:3000/user";
+      const userId = localStorage.getItem("userId");
+      const BASE_URL = ["localhost", "127.0.0.1"].includes(
+        window.location.hostname
+      )
+        ? "http://localhost:3000"
+        : "";
+      const apiBase = `${BASE_URL}/user`;
 
       // Elements
       const profilePic = document.getElementById("profilePic");
@@ -376,7 +381,12 @@
         }
       });
 
-      const socket = io("http://localhost:3000"); // make sure it's globally available
+      const socket = io(
+        window.location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : window.location.origin
+      );
+      // make sure it's globally available
 
       document.querySelector(".logout-btn").addEventListener("click", () => {
         const userId = localStorage.getItem("userId");

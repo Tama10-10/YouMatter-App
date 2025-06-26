@@ -1,6 +1,11 @@
  async function shareWithWhatsApp() {
         const userId = localStorage.getItem("userId");
-        const apiBase = "http://localhost:3000/user";
+         const BASE_URL = ["localhost", "127.0.0.1"].includes(
+        window.location.hostname
+      )
+        ? "http://localhost:3000"
+        : "";
+        const apiBase = `${BASE_URL}/user`;
         let phoneNumber = "";
 
         // 1. Fetch emergency contact

@@ -114,9 +114,14 @@
             secretPin: form.secretPin.value,
             agreedToTerms: form.agreedToTerms.checked,
           };
+          const BASE_URL = ["localhost", "127.0.0.1"].includes(
+            window.location.hostname
+          )
+            ? "http://localhost:3000"
+            : "";
 
           try {
-            const res = await fetch("http://localhost:3000/user/signup", {
+            const res = await fetch(`${BASE_URL}/user/signup`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
