@@ -27,6 +27,8 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB error:', err));
+  console.log("Mongo URI:", process.env.MONGO_URI);
+
 
 // ✅ Serve frontend from public folder
 app.use(express.static(path.join(__dirname, 'public')));
