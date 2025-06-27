@@ -25,8 +25,9 @@
       }
 
       .feature-card {
-        flex: 0 0 300px;
-
+        flex: 1 1 300px; /* Allow it to shrink below 300px */
+        min-width: 250px;
+        max-width: 100%;
         background: white;
         padding: 20px;
         border-radius: 10px;
@@ -52,6 +53,33 @@
       .feature-card i {
         font-size: 30px;
         color: #5f268d;
+      }
+      @media (max-width: 600px) {
+        #about {
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        #about h2 {
+          font-size: 1.5em !important;
+        }
+        #about p {
+          font-size: 0.9rem !important;
+        }
+
+        .feature-card {
+          width: 90%; /* Full width on small screens */
+          min-width: auto;
+        }
+        #contact {
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        #contact h2 {
+          font-size: 1.5em !important;
+        }
+        #contact p {
+          font-size: 0.9rem !important;
+        }
       }
     </style>
   </head>
