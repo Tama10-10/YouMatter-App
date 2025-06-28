@@ -175,6 +175,7 @@
     <script src="shareLocation.js"></script>
 
     <script src="work.js"></script>
+
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -267,6 +268,48 @@
         // Start the interval
         setInterval(showSafetyPrompt, 2 * 60 * 1000);
       });
+    </script>
+    <script>
+      (function verifyUserToken() {
+        const token = localStorage.getItem("accessToken");
+
+        if (!token) {
+          console.warn("No access token found.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        const BASE_URL = ["localhost", "127.0.0.1"].includes(
+          window.location.hostname
+        )
+          ? "http://localhost:3000"
+          : "";
+
+        fetch(`${BASE_URL}/user/verify-token`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then(async (res) => {
+            if (!res.ok) {
+              const errorData = await res.json();
+              console.error("Token verification failed:", errorData);
+              throw new Error("Invalid token");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            console.log("✅ Token verified. User data:", data.user);
+            // You can display user info here
+          })
+          .catch((err) => {
+            console.warn("⚠️ Verification error:", err.message);
+            //localStorage.removeItem("accessToken");
+            //localStorage.removeItem("userId");
+            window.location.href = "index.html";
+          });
+      })();
     </script>
 
     <div id="safetyModal" class="modal">

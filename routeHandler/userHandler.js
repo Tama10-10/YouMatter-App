@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const authenticate = require('../middlewares/authenticate');
 const userSchema = require('../schemas/userSchema');
 const router = express.Router();
 
@@ -98,6 +98,12 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Server error: ' + err.message });
   }
 });
+router.get('/verify-token', authenticate, (req, res) => {
+  // If authenticate middleware calls next(), token is valid
+  console.log('Authorization header:', req.headers.authorization);
+
+  res.json({ valid: true, user: req.user }); // req.user set by authenticate middleware
+});
 // Get User Profile
 router.get('/:id', async (req, res) => {
   try {
@@ -109,7 +115,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 // Update profile fields
-router.put('/:id/update', async (req, res) => {
+router.put('/:id/update',async (req, res) => {
   const { userName, email, mobileNumber, emergencyContact } = req.body;
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -122,6 +128,7 @@ router.put('/:id/update', async (req, res) => {
     res.status(500).json({ error: 'Error updating profile' });
   }
 });
+
 module.exports = router;
 
 
