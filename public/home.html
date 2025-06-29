@@ -327,7 +327,7 @@
               alert("User login successful!");
               localStorage.setItem("accessToken", userResult.accessToken);
               localStorage.setItem("userId", userResult.user._id);
-              window.location.href = "user.html";
+              window.location.href = "index.html";
             } else {
               alert(userResult.error || "Login failed");
             }
