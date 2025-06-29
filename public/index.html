@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YouMatter-Home page</title>
+    <title>YouMatter-Track Me</title>
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -13,354 +13,320 @@
       referrerpolicy="no-referrer"
     />
     <style>
-      .feature-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        max-width: 800px;
-        width: 100%; /* Make it take full width inside the section */
-        margin: 30px auto 0; /* Center horizontally */
-        box-sizing: border-box;
-      }
-
-      .feature-card {
-        flex: 1 1 300px; /* Allow it to shrink below 300px */
-        min-width: 250px;
-        max-width: 100%;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
         text-align: center;
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease,
-          background-color 0.3s ease,
-          color 0.3s ease;
+        margin: 0;
+        padding: 0;
       }
-      .feature-card:hover {
-        transform: translateY(-8px);
-        background-color: #5f268d; /* Purple background on hover */
-        color: white; /* Change text color to white */
-        box-shadow: 0 8px 20px rgba(95, 38, 141, 0.25);
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      #track-button {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px;
+        background-color: #5f268d;
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 10;
+      }
+      #track-button:hover {
+        opacity: 0.8;
       }
 
-      .feature-card:hover i {
-        color: white; /* Change icon color to match on hover */
+      #map {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+      }
+      #location-info {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
       }
 
-      .feature-card i {
-        font-size: 30px;
-        color: #5f268d;
+      .modal-content {
+        background-color: #fff;
+        margin: 20% auto;
+        padding: 30px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
       }
-      @media (max-width: 600px) {
-        #about {
-          margin-left: auto !important;
-          margin-right: auto !important;
-        }
-        #about h2 {
-          font-size: 1.5em !important;
-        }
-        #about p {
-          font-size: 0.9rem !important;
-        }
 
-        .feature-card {
-          width: 90%; /* Full width on small screens */
-          min-width: auto;
-        }
-        #contact {
-          margin-left: auto !important;
-          margin-right: auto !important;
-        }
-        #contact h2 {
-          font-size: 1.5em !important;
-        }
-        #contact p {
-          font-size: 0.9rem !important;
-        }
+      .modal-content input {
+        width: 90%;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      .modal-content button {
+        background-color: #5f268d;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .modal-content button:hover {
+        opacity: 0.9;
       }
     </style>
   </head>
-  <body>
+  <body class="user">
     <header class="header">
       <a href="profile.html" class="logo"><img src="image hub\Safe.png" /></a>
       <label id="menu-icon" class="icons"
         ><i class="fa-solid fa-bars" onclick="show()"></i
       ></label>
       <nav class="navbar" id="navbar">
-        <a href="#login" style="--i: 1">Log In</a>
-        <a href="#about" style="--i: 0">About</a>
-
-        <a href="#contact" style="--i: 2">Contact</a>
+        <a href="fakeCall.html" style="--i: 0">Fake Call</a>
+        <a href="index.html" style="--i: 1" id="trackMe">Track Me</a>
+        <a href="#" style="--i: 2" onclick="shareWithWhatsApp()"
+          >Share My Location</a
+        >
       </nav>
     </header>
 
-    <h1 id="headline">Your Safety,Our Priority</h1>
-    <div class="login" id="login">
-      <form>
-        <div><h2>Login</h2></div>
-        <div class="inputbox">
-          <input type="text" placeholder="Username" required /><i
-            class="fa-solid fa-user"
-          ></i>
-        </div>
-        <div class="inputbox">
-          <input type="password" placeholder="Password" required /><i
-            class="fa-solid fa-lock"
-          ></i>
-        </div>
-        <div class="forget-remember">
-          <label> <input type="checkbox" />Remember me</label>
-          <a href="#">Forgot Password?</a>
-          <button type="submit" class="btn">Login</button>
-        </div>
-        <div class="register">
-          <p>
-            Don't have an account?<a href="#" onclick="register()">Register</a>
-          </p>
-        </div>
-      </form>
-    </div>
-    <div id="tagline">
-      <p>
-        <i
-          >Empowering women's safety with real-time<br />
-          assistance and location tracking.</i
-        >
-      </p>
-    </div>
-    <div class="start">
-      <button id="strt-btn" onclick="start()">
-        <a href="#" id="strt">Get Started</a>
-      </button>
-    </div>
+    <div id="map" style="height: 100vh"></div>
+    <button id="track-button">TRACK ME</button>
 
-    <section
-      id="about"
-      style="
-        max-width: 1000px;
-        padding: 100px 20px 60px; /* keep padding */
-        margin-top: 100vh;
-        margin-left: 20%;
-        background-color: #f7f7f7;
-        color: #333;
-        text-align: center;
-        box-sizing: border-box;
-      "
-    >
-      <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: #5f268d">
-        About YouMatter
-      </h2>
-      <p
-        style="
-          font-size: 1.1rem;
-          line-height: 1.8;
-          max-width: 800px;
-          margin: 0 auto;
-        "
-      >
-        <strong>YouMatter</strong> is a web application designed to ensure the
-        safety of women traveling alone, especially at night. Our app offers
-        real-time location tracking, emergency alerts, and features like fake
-        calls to help users avoid unsafe situations. We believe in using
-        technology to build a safer environment for everyone.
-      </p>
+    <!-- 1. Your custom logic (initMap is defined here first) -->
+    <script>
+      let map, userMarker, watchId;
 
-      <div class="feature-container">
-        <!-- Feature 1 -->
-        <div class="feature-card">
-          <i class="fa-solid fa-map-location-dot"></i>
-          <h3>Live Tracking</h3>
-          <p>
-            Real-time tracking to help guardians monitor movement instantly.
-          </p>
-        </div>
+      function initMap() {
+        const defaultLocation = { lat: 23.8103, lng: 90.4125 }; // Dhaka
 
-        <!-- Feature 2 -->
-        <div class="feature-card">
-          <i class="fa-solid fa-phone-volume"></i>
-          <h3>Fake Call</h3>
-          <p>
-            Simulate an incoming call to help get out of uncomfortable
-            situations.
-          </p>
-        </div>
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: defaultLocation,
+          zoom: 15,
+        });
 
-        <!-- Feature 3 -->
-        <div class="feature-card">
-          <i class="fa-solid fa-shield-heart"></i>
-          <h3>Safety Alerts</h3>
-          <p>
-            Send alerts in every 2 minutes for getting safety assurance from the
-            user.
-          </p>
-        </div>
+        userMarker = new google.maps.Marker({
+          position: defaultLocation,
+          map: map,
+          title: "Your Location",
+        });
 
-        <!-- Feature 4 -->
-        <div class="feature-card">
-          <i class="fa-solid fa-location-arrow"></i>
-          <h3>Location Sharing</h3>
-          <p>
-            Instantly share your current location with a trusted contact for
-            quick help.
-          </p>
-        </div>
-      </div>
-    </section>
-    <section
-      id="contact"
-      style="
-        max-width: 1000px;
-        padding: 100px 20px 60px; /* keep padding */
-        margin-top: 100vh;
-        margin-left: 20%;
-        background-color: #f7f7f7;
-        color: #333;
-        text-align: center;
-        box-sizing: border-box;
-      "
-    >
-      <h2 style="font-size: 2.2rem; color: #5f268d; margin-bottom: 20px">
-        Contact Us
-      </h2>
-      <p style="max-width: 700px; margin: 0 auto 30px; font-size: 1rem">
-        Have questions, feedback, or need support? We’re here to help. Reach out
-        to us using the form below.
-      </p>
-      <form
-        style="
-          max-width: 600px;
-          margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
-        "
-      >
-        <input
-          type="text"
-          placeholder="Your Name"
-          required
-          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
-        />
-        <input
-          type="email"
-          placeholder="Your Email"
-          required
-          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
-        />
-        <textarea
-          rows="5"
-          placeholder="Your Message"
-          required
-          style="padding: 12px; border-radius: 8px; border: 1px solid #ccc"
-        ></textarea>
-        <button
-          type="submit"
-          style="
-            padding: 12px;
-            background-color: #5f268d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-          "
-        >
-          Send Message
-        </button>
-      </form>
-    </section>
+        document
+          .getElementById("track-button")
+          .addEventListener("click", () => {
+            if (navigator.geolocation) {
+              if (watchId) navigator.geolocation.clearWatch(watchId);
+
+              watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                  const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                  };
+                  userMarker.setPosition(userLocation);
+                  map.setCenter(userLocation);
+                },
+                (err) => {
+                  console.error("Location error:", err);
+                  alert("Unable to retrieve your location.");
+                },
+                {
+                  enableHighAccuracy: true,
+                  timeout: 5000,
+                  maximumAge: 0,
+                }
+              );
+            } else {
+              alert("Geolocation is not supported by your browser.");
+            }
+          });
+      }
+    </script>
+
+    <!-- 2. THEN load Google Maps API which will call initMap -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEgEFWnQ3Jzt-ZAohzc0iQnhPLuAHCHls&callback=initMap"
+      async
+      defer
+    ></script>
+
+    <script src="shareLocation.js"></script>
 
     <script src="work.js"></script>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
-      document
-        .querySelector(".login form")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-
-          const form = e.target;
-          const userName = form.querySelector(
-            "input[placeholder='Username']"
-          ).value;
-          const password = form.querySelector(
-            "input[placeholder='Password']"
-          ).value;
-          const BASE_URL = ["localhost", "127.0.0.1"].includes(
-            window.location.hostname
-          )
+      document.addEventListener("DOMContentLoaded", () => {
+        const socket = io(
+          ["localhost", "127.0.0.1"].includes(window.location.hostname)
             ? "http://localhost:3000"
-            : "";
+            : window.location.origin // use same origin on Render
+        );
+        const userId = localStorage.getItem("userId");
+        socket.emit("register-user", userId);
+        //realtime location tracking
+        if (navigator.geolocation) {
+          navigator.geolocation.watchPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
 
-          console.log("Base URL being used:", BASE_URL);
-          try {
-            // Try admin login first
-            const adminRes = await fetch(`${BASE_URL}/admin/login`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userName, password }),
-            });
-
-            const adminResult = await adminRes.json();
-
-            if (adminRes.ok) {
-              alert("Admin login successful!");
-              localStorage.setItem("accessToken", adminResult.accessToken);
-              localStorage.setItem("userRole", "admin");
-              window.location.href = "admin.html";
-              return; // ✅ Stop here if admin login succeeded
-            } else {
-              alert("admin login failed");
+              socket.emit("location-update", {
+                userId,
+                location: {
+                  latitude,
+                  longitude,
+                },
+                time: new Date(),
+              });
+            },
+            (error) => {
+              console.error("Location error:", error);
+            },
+            {
+              enableHighAccuracy: true,
+              maximumAge: 5000,
+              timeout: 10000,
             }
+          );
+        } else {
+          alert("Geolocation is not supported by your browser.");
+        }
 
-            // If admin login failed, try user login
-            const userRes = await fetch(`${BASE_URL}/user/login`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ userName, password }),
-            });
+        let modalTimer;
 
-            const userResult = await userRes.json();
-
-            if (userRes.ok) {
-              alert("User login successful!");
-              localStorage.setItem("accessToken", userResult.accessToken);
-              localStorage.setItem("userId", userResult.user._id);
-              window.location.href = "user.html";
-            } else {
-              alert(userResult.error || "Login failed");
-            }
-          } catch (err) {
-            console.error("Login error:", err);
-            alert("Something went wrong!");
+        function showSafetyPrompt() {
+          const modal = document.getElementById("safetyModal");
+          if (modal) {
+            modal.style.display = "block";
+            modalTimer = setTimeout(() => {
+              sendSafetyStatus("danger");
+              closeModal();
+            }, 30000); // 30 seconds
           }
-        });
+        }
+
+        function submitSafetyStatus() {
+          const code = document.getElementById("safeCode").value.trim();
+          const passcode = document
+            .getElementById("secretPasscode")
+            .value.trim();
+
+          if (code === "1" && passcode !== "") {
+            sendSafetyStatus("safe", passcode);
+          } else if (code === "2" && passcode !== "") {
+            sendSafetyStatus("emergency", passcode);
+          } else {
+            sendSafetyStatus("unconfirmed-danger"); // ❌ Didn't respond or wrong code
+          }
+
+          closeModal();
+        }
+
+        function sendSafetyStatus(status, passcode = "") {
+          socket.emit("safety-status", {
+            userId,
+            status,
+            passcode,
+            time: new Date(),
+          });
+        }
+
+        function closeModal() {
+          clearTimeout(modalTimer);
+          const modal = document.getElementById("safetyModal");
+          if (modal) modal.style.display = "none";
+          document.getElementById("safeCode").value = "";
+          document.getElementById("secretPasscode").value = "";
+        }
+
+        document
+          .querySelector("#safetyModal button")
+          .addEventListener("click", submitSafetyStatus);
+        showSafetyPrompt();
+        // Start the interval
+        setInterval(showSafetyPrompt, 2 * 60 * 1000);
+      });
     </script>
     <script>
-      const contactForm = document.querySelector("#contact form");
+      (function verifyUserToken() {
+        const token = localStorage.getItem("accessToken");
 
-      contactForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Stop default form action
-
-        const name = contactForm
-          .querySelector('input[type="text"]')
-          .value.trim();
-        const email = contactForm
-          .querySelector('input[type="email"]')
-          .value.trim();
-        const message = contactForm.querySelector("textarea").value.trim();
-
-        if (!name || !email || !message) {
-          alert("Please fill in all fields.");
+        if (!token) {
+          console.warn("No access token found.");
+          window.location.href = "home.html";
           return;
         }
 
-        // ✅ You can replace this with your backend POST request
-        alert("Thank you! Your message has been sent.");
+        const BASE_URL = ["localhost", "127.0.0.1"].includes(
+          window.location.hostname
+        )
+          ? "http://localhost:3000"
+          : "";
 
-        // Optionally reset the form
-        contactForm.reset();
-      });
+        fetch(`${BASE_URL}/user/verify-token`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then(async (res) => {
+            if (!res.ok) {
+              const errorData = await res.json();
+              console.error("Token verification failed:", errorData);
+              throw new Error("Invalid token");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            console.log("✅ Token verified. User data:", data.user);
+            // You can display user info here
+          })
+          .catch((err) => {
+            console.warn("⚠️ Verification error:", err.message);
+            //localStorage.removeItem("accessToken");
+            //localStorage.removeItem("userId");
+            window.location.href = "home.html";
+          });
+      })();
     </script>
+
+    <div id="safetyModal" class="modal">
+      <div class="modal-content">
+        <p>Are you safe?</p>
+        <input
+          type="text"
+          id="safeCode"
+          placeholder="Enter 1 for Yes , 2 for No"
+        />
+        <input
+          type="password"
+          id="secretPasscode"
+          placeholder="Secret Passcode"
+        />
+        <button onclick="submitSafetyStatus()">Submit</button>
+      </div>
+    </div>
   </body>
 </html>
