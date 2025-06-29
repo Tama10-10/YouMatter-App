@@ -425,6 +425,20 @@
         </div>
       </div>
     </div>
+    <!-- Incoming Call Notification -->
+<div id="incomingCallPopup" style="display: none; position: fixed; top: 20px; left: 10px; right: 10px; margin: auto; z-index: 99999; background: white; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); padding: 20px; width: 90%; max-width: 400px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <strong style="font-size: 18px;">Incoming Call</strong><br />
+      <span id="popupNumber" style="font-size: 14px; color: gray;">01303670625</span>
+    </div>
+    <div>
+      <button onclick="acceptFakeCall()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 8px; margin-right: 5px; cursor: pointer;">ACCEPT</button>
+      <button onclick="declineFakeCall()" style="background: #f44336; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer;">DECLINE</button>
+    </div>
+  </div>
+</div>
+
 <script src="shareLocation.js"></script>
     <script>
       function showEditContainer() {
@@ -455,18 +469,43 @@
         setTimeout(showFakeCallScreen, seconds * 1000);
       }
 
-      function showFakeCallScreen() {
-        const name = localStorage.getItem("fakeCallName") || "Unknown";
-        const number = localStorage.getItem("fakeCallNumber") || "Unknown";
+     function showFakeCallScreen() {
+  const name = localStorage.getItem("fakeCallName") || "Unknown";
+  const number = localStorage.getItem("fakeCallNumber") || "Unknown";
 
-        document.getElementById("displayName").innerText = name;
-        document.getElementById("displayNumber").innerText = number;
+  document.getElementById("popupNumber").innerText = number;
 
-        document.getElementById("fakeCallScreen").style.display = "flex";
+  // Show popup instead of full screen immediately
+  document.getElementById("incomingCallPopup").style.display = "block";
+  document.getElementById("ringtone").play();
+}
+function acceptFakeCall() {
+  // Hide the popup
+  document.getElementById("incomingCallPopup").style.display = "none";
 
-        startFakeTimer();
-        document.getElementById("ringtone").play();
-      }
+  // Stop the ringtone
+  const ringtone = document.getElementById("ringtone");
+  ringtone.pause();
+  ringtone.currentTime = 0;
+
+  // Show fake call screen
+  const name = localStorage.getItem("fakeCallName") || "Unknown";
+  const number = localStorage.getItem("fakeCallNumber") || "Unknown";
+
+  document.getElementById("displayName").innerText = name;
+  document.getElementById("displayNumber").innerText = number;
+
+  document.getElementById("fakeCallScreen").style.display = "flex";
+  startFakeTimer();
+}
+
+
+function declineFakeCall() {
+  document.getElementById("incomingCallPopup").style.display = "none";
+  document.getElementById("ringtone").pause();
+  document.getElementById("ringtone").currentTime = 0;
+}
+
 
       function startFakeTimer() {
         const timerDisplay = document.getElementById("callTimer");
