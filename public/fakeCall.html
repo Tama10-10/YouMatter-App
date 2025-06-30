@@ -233,7 +233,7 @@
       ></label>
       <nav class="navbar" id="navbar">
         <a href="fakeCall.html" style="--i: 0">Fake Call</a>
-        <a href="user.html" style="--i: 1" id="trackMe">Track Me</a>
+        <a href="index.html" style="--i: 1" id="trackMe">Track Me</a>
         <a href="#" style="--i: 2" onclick="shareWithWhatsApp()"
           >Share My Location</a
         >
@@ -400,7 +400,7 @@
         </div>
         <div class="caller-info">
           <div id="displayName">Ma</div>
-          <div id="displayNumber">01303670625</div>
+          <div id="displayNumber">Unknown</div>
           <div id="callTimer">00:00</div>
         </div>
        <!-- Call Actions -->
@@ -430,7 +430,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <div>
       <strong style="font-size: 18px;">Incoming Call</strong><br />
-      <span id="popupNumber" style="font-size: 14px; color: gray;">01303670625</span>
+      <span id="popupNumber" style="font-size: 14px; color: gray;">Unknown</span>
     </div>
     <div>
       <button onclick="acceptFakeCall()" style="background: #4CAF50; color: white; border: none; padding: 10px 16px; border-radius: 8px; margin-right: 5px; cursor: pointer;">ACCEPT</button>
@@ -470,8 +470,8 @@
       }
 
      function showFakeCallScreen() {
-  const name = localStorage.getItem("fakeCallName") || "Unknown";
-  const number = localStorage.getItem("fakeCallNumber") || "Unknown";
+  const name = localStorage.getItem("fakeCallName") || "Ma";
+  const number = localStorage.getItem("fakeCallNumber") || "unknown";
 
   document.getElementById("popupNumber").innerText = number;
 
