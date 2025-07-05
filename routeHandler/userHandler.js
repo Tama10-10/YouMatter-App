@@ -4,11 +4,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authenticate = require('../middlewares/authenticate');
 const userSchema = require('../schemas/userSchema');
+const User2 = require('../schemas/resetSchema'); // adjust path as needed
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+
 const router = express.Router();
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-
+router.use((req, res, next) => {
+  console.log(`Incoming: ${req.method} ${req.originalUrl}`);
+  next();
+});
 // Signup Route
 router.post('/signup', async (req, res) => {
   try {
@@ -128,6 +136,65 @@ router.put('/:id/update',async (req, res) => {
     res.status(500).json({ error: 'Error updating profile' });
   }
 });
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User2.findOne({ email });
+
+  if (!user) return res.status(404).json({ error: 'No user found with this email' });
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  await user.save();
+  const host = req.headers.host; // e.g., "localhost:5000" or "yourdomain.com"
+  const isLocalhost = host.startsWith('localhost') || host.startsWith('127.0.0.1');
+
+  const Base = isLocalhost
+  ? 'http://127.0.0.1:5501/public'
+  : 'https://youmatter-app.onrender.com'; 
+
+  const resetLink = `${Base}/reset-password.html?token=${token}`;
+  // Send email
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // store in .env
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    to: user.email,
+    from: process.env.EMAIL_USER,
+    subject: 'Reset Your Password',
+    text: `You requested a password reset. Click this link to reset it:\n\n${resetLink}`
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) return res.status(500).json({ error: 'Email failed to send' });
+    res.json({ message: 'Password reset link sent to your email' });
+  });
+});
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  const user = await User2.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) return res.status(400).json({ error: 'Invalid or expired token' });
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  res.json({ message: 'Password has been reset successfully' });
+});
+
 
 module.exports = router;
 
