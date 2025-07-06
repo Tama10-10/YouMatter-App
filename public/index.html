@@ -215,19 +215,24 @@
         }
 
         let modalTimer;
+        let userResponded = false;
 
         function showSafetyPrompt() {
+          userResponded = false;
           const modal = document.getElementById("safetyModal");
           if (modal) {
             modal.style.display = "block";
             modalTimer = setTimeout(() => {
-              sendSafetyStatus("danger");
-              closeModal();
-            }, 30000); // 30 seconds
+              if (!userResponded) {
+                sendSafetyStatus("unconfirmed-danger");
+                closeModal();
+              }
+            }, 30000); // Wait 30 seconds
           }
         }
 
-        function submitSafetyStatus() {
+        window.submitSafetyStatus = function () {
+          userResponded = true; // Set to true so timeout won't emit
           const code = document.getElementById("safeCode").value.trim();
           const passcode = document
             .getElementById("secretPasscode")
@@ -238,12 +243,11 @@
           } else if (code === "2" && passcode !== "") {
             sendSafetyStatus("emergency", passcode);
           } else {
-            sendSafetyStatus("unconfirmed-danger"); // ❌ Didn't respond or wrong code
+            sendSafetyStatus("unconfirmed-danger");
           }
 
           closeModal();
-        }
-
+        };
         function sendSafetyStatus(status, passcode = "") {
           socket.emit("safety-status", {
             userId,
@@ -262,8 +266,9 @@
         }
 
         document
-          .querySelector("#safetyModal button")
+          .getElementById("safetySubmitBtn")
           .addEventListener("click", submitSafetyStatus);
+
         showSafetyPrompt();
         // Start the interval
         setInterval(showSafetyPrompt, 2 * 60 * 1000);
@@ -325,7 +330,7 @@
           id="secretPasscode"
           placeholder="Secret Passcode"
         />
-        <button onclick="submitSafetyStatus()">Submit</button>
+        <button id="safetySubmitBtn">Submit</button>
       </div>
     </div>
   </body>

@@ -24,6 +24,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
   emergencyContact: {
     type: String,
     required: true,
@@ -51,4 +53,4 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-module.exports = userSchema;
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

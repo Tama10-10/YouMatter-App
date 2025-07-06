@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authenticate = require('../middlewares/authenticate');
-const userSchema = require('../schemas/userSchema');
-const User2 = require('../schemas/resetSchema'); // adjust path as needed
+const User = require('../schemas/userSchema');
+
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 
 const router = express.Router();
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+
 
 router.use((req, res, next) => {
   console.log(`Incoming: ${req.method} ${req.originalUrl}`);
@@ -92,7 +92,7 @@ router.post('/login', async (req, res) => {
         userId: user._id 
 
       },process.env.JWT_SECRET,
-  { expiresIn: "1h" });
+  { expiresIn: "12h" });
    res.status(200).json({
   message: 'Login successful',
   accessToken: token,
@@ -138,7 +138,7 @@ router.put('/:id/update',async (req, res) => {
 });
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
-  const user = await User2.findOne({ email });
+  const user = await User.findOne({ email });
 
   if (!user) return res.status(404).json({ error: 'No user found with this email' });
 
@@ -178,11 +178,14 @@ router.post('/forgot-password', async (req, res) => {
 router.post('/reset-password/:token', async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
+console.log('Reset token received in URL param:', token);
 
-  const user = await User2.findOne({
+  const user = await User.findOne({
     resetPasswordToken: token,
     resetPasswordExpires: { $gt: Date.now() }
   });
+  console.log('User found for token:', user);
+
 
   if (!user) return res.status(400).json({ error: 'Invalid or expired token' });
 
@@ -197,6 +200,3 @@ router.post('/reset-password/:token', async (req, res) => {
 
 
 module.exports = router;
-
-
-

@@ -9,7 +9,8 @@ const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+const User = require('./schemas/userSchema'); // Ensure this is the correct path
+
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
@@ -100,9 +101,12 @@ io.on('connection', (socket) => {
   // User sends safety status update
   socket.on("safety-status", async (data) => {
   const { userId, passcode,status,time } = data;
+  console.log(data);
        let finalStatus = "unconfirmed-danger";
   try {
     const user = await User.findById(userId);
+    console.log("User:", user); // ✅ full user object
+console.log("Secret PIN:", user?.secretPin); // ✅ actual value from DB
     if (status === "safe" && user && user.secretPin === passcode) {
       finalStatus = "safe";
     } else if (status === "emergency" && user && user.secretPin === passcode) {
@@ -187,4 +191,3 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
