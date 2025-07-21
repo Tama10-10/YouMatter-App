@@ -4,7 +4,7 @@
         window.location.hostname
       )
         ? "http://localhost:3000"
-        : "";
+        : "https://youmatter-app.onrender.com";
         const apiBase = `${BASE_URL}/user`;
         let phoneNumber = "";
 
